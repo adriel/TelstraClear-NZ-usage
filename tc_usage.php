@@ -94,12 +94,13 @@ function getUsageArray($url)
 	$usageHistorySrc = get_page($usageLink[0]);
 
 	// PARSE - (2)
-	$currentBilling = getTagContents( $usageHistorySrc, 'a', 'class', 'usg_menuCurrent', 'getAttrCont', 'href' );
-	if (empty($currentBilling[0])) {echo '03 - Failed to get billing page';return false;} // Return error if billing page failed to load
+	preg_match_all("/serviceUsage\[0\]\ \=\ \"(.+)\"/", $usageHistorySrc, $currentBilling, PREG_SET_ORDER);
+	// $currentBilling = getTagContents( $usageHistorySrc, 'a', 'class', 'usg_menuCurrent', 'getAttrCont', 'href' );
+	if (empty($currentBilling[0][1])) {echo '03 - Failed to get billing page';return false;} // Return error if billing page failed to load
 	// echo 'Current Billing link: https://www.telstraclear.co.nz' . $currentBilling[0] . "\n\n";
 
 	// GET
-	$tmpURL2 = 'https://www.telstraclear.co.nz' . $currentBilling[0];
+	$tmpURL2 = 'https://www.telstraclear.co.nz' . $currentBilling[0][1];
 	$usageDetailedSrc = get_page($tmpURL2);
 
 	// PARSE - (3) Date info
